@@ -7,9 +7,12 @@ import io.restassured.internal.common.assertion.Assertion;
 import io.restassured.response.Response;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+
 import static io.restassured.RestAssured.given;
+
 
 public class HR extends HrTestBase {
 
@@ -30,7 +33,7 @@ Verify response body has
     */
 
     @Test
-    public void test(){
+    public void test1() {
         //1. Send request to HR url and save the response
         //2. GET /regions
         //3. Store the response in Response Object that comes from get Request
@@ -57,4 +60,76 @@ Verify response body has
         Assertions.assertTrue(response.headers().hasHeaderWithName("Date"));
 
     }
+
+    @DisplayName("GET/employees/150 with path() method")
+    @Test
+    public void test2() {
+
+     /*
+       Task 2:
+
+1. Send request to HR url and save the response
+2. GET /employees/150
+3. Store the response in Response Object that comes from get Request
+4. Print out followings
+First Name
+Last Name
+Verify status code is 200
+Verify First Name is "Peter"
+- Verify content-Type is application/json
+      */
+
+        Response response =
+                given()
+                        .accept(ContentType.JSON)
+                        .pathParam("id", 150)
+                        .when().get("/employees/{id}");
+        response.prettyPrint();
+
+
+        String firstName = response.path("first_name");
+        System.out.println("firstName = " + firstName);
+
+        String lastName = response.path("last_name");
+        System.out.println("lastName = " + lastName);
+
+        int employeeId = response.path("employee_id");
+        System.out.println("employeeId = " + employeeId);
+
+        String email = response.path("email");
+        System.out.println("email = " + email);
+
+        String phoneNumber = response.path("phone_number");
+        System.out.println("phoneNumber = " + phoneNumber);
+
+        int salary = response.path("salary");
+        System.out.println("salary = " + salary);
+
+        int managerId = response.path("manager_id") ;
+        System.out.println("managerId = " + managerId);
+
+        int departmentId = response.path("department_id");
+        System.out.println("departmentId = " + departmentId);
+
+         // get href!!!!!
+        int[] array= new int[5];
+        System.out.println(array[0]);
+        // here  the same when you get first_name from
+        // Json Object you provide key
+        // here the same
+        // System.out.println(array[0]) you GET one Json Object
+        //and then you provide the KEY
+        System.out.println(response.path("links[0].href").toString());
+
+        // what  if  I  want to get all Array
+
+
+
+        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals("application/json", response.contentType());
+
+
+    }
+
+
 }
